@@ -3,6 +3,7 @@ import { DatabaseConnection } from "./database/database.js";
 import { config } from 'dotenv'
 import UserRoutes from "./routes/user.route.js"
 import AuthRoutes from "./routes/auth.route.js"
+import cookieParser from "cookie-parser";
 config({ path: '.env' });
 
 const app = express();
@@ -16,6 +17,7 @@ DatabaseConnection();
 // Routes
 app.use("/api/user", UserRoutes);
 app.use("/api/auth", AuthRoutes);
+app.use(cookieParser());
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
