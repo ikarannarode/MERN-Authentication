@@ -9,6 +9,6 @@ export const verifyToken = (req, res, next) => {
         if (error) return next(errorHandler(403, "Token is not valid"));
         req.user = user;
         next();
-    });
 
+    });
 }
