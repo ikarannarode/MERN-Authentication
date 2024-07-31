@@ -94,7 +94,7 @@ function Profile() {
                 <input type="text" name="username" id="username" placeholder='Username' defaultValue={currentUser.username} className='bg-slate-100 lg-3 p-3 rounded-lg' onChange={handleChange} />
                 <input type="email" name="email" id="email" placeholder='Email' defaultValue={currentUser.email} className='bg-slate-100 lg-3 p-3 rounded-lg' onChange={handleChange} />
                 <input type="password" name="password" id="password" placeholder='Password' className='bg-slate-100 lg-3 p-3 rounded-lg' onChange={handleChange} />
-                <button type="button" className='uppercase bg-slate-700 text-white p-3 rounded-lg hover:opacity-95 disabled:opacity-95'>update</button>
+                <button type="button" onClick={handleSubmit} className='uppercase bg-slate-700 text-white p-3 rounded-lg hover:opacity-95 disabled:opacity-95'>update</button>
             </form>
             <div className='flex justify-between mt-5'>
                 <span className='text-red-700 cursor-pointer'>Delete Account</span>
