@@ -7,6 +7,10 @@ import {
     updateUserStart,
     updateUserSuccess,
     updateUserFailure,
+    deleteUserStart,
+    deleteUserFailure,
+    deleteUserSuccess,
+    signOut
 } from '../redux/user/userSlice';
 
 
@@ -17,7 +21,9 @@ function Profile() {
     const [imagePercent, setImagePercent] = useState(0)
     const [imageError, setImageError] = useState(false)
     const [formData, setFormData] = useState({})
-    const { currentUser } = useSelector(state => state.user);
+    const [updateSucess, setUpdateSuccess] = useState(false)
+    const { currentUser, loading, error } = useSelector(state => state.user);
+
     useEffect(() => {
         if (image) {
             handleFileUpload(image);
@@ -79,6 +85,36 @@ function Profile() {
         }
     };
 
+    const handleDeleteAccount = async (req, res) => {
+        try {
+            dispatch(deleteUserStart())
+            const res = await fetch(`/api/user/delete/${currentUser.id}`, {
+                method: 'DELETE'
+            });
+            const data = await res.json();
+            if (data.success === false) {
+                dispatch(deleteUserFailure(data));
+                return;
+            }
+            dispatch(deleteUserSuccess);
+
+        } catch (error) {
+            dispatch(deleteUserFailure(error));
+        }
+    }
+
+
+    const handleSignOut = async () => {
+        try {
+            await fetch('/api/auth/signout');
+            dispatch(signOut());
+
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <div className='p-3 max-w-lg mx-auto'>
             <h1 className='my-7 text-center font-semibold text-3xl'> Profile</h1>
@@ -94,12 +130,19 @@ function Profile() {
                 <input type="text" name="username" id="username" placeholder='Username' defaultValue={currentUser.username} className='bg-slate-100 lg-3 p-3 rounded-lg' onChange={handleChange} />
                 <input type="email" name="email" id="email" placeholder='Email' defaultValue={currentUser.email} className='bg-slate-100 lg-3 p-3 rounded-lg' onChange={handleChange} />
                 <input type="password" name="password" id="password" placeholder='Password' className='bg-slate-100 lg-3 p-3 rounded-lg' onChange={handleChange} />
-                <button type="button" onClick={handleSubmit} className='uppercase bg-slate-700 text-white p-3 rounded-lg hover:opacity-95 disabled:opacity-95'>update</button>
+                <button type="button" onClick={handleSubmit} className='uppercase bg-slate-700 text-white p-3 rounded-lg hover:opacity-95 disabled:opacity-95'>{loading ? "Loading..." : "Update"}</button>
             </form>
             <div className='flex justify-between mt-5'>
-                <span className='text-red-700 cursor-pointer'>Delete Account</span>
-                <span className='text-red-700 cursor-pointer'>Sign out</span>
+                <span
+                    onClick={handleDeleteAccount}
+                    className='text-red-700 cursor-pointer'
+                >
+                    Delete Account
+                </span>
+                <span onClick={handleSignOut} className='text-red-700 cursor-pointer'>Sign out</span>
             </div>
+            <p className='text-red-700 mt-5'>{error && "Something went wrong!"}</p>
+            <p className='text-green-700 mt-5'>{updateSucess && "User updated successfully"}</p>
         </div>
     )
 }
