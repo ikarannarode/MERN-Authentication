@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+
 const initialState = {
     currentUser: null,
     loading: false,
@@ -52,6 +53,7 @@ const userSlice = createSlice({
         },
     },
 });
+
 export const {
     signInStart,
     signInSuccess,
@@ -60,8 +62,8 @@ export const {
     updateUserStart,
     updateUserSuccess,
     deleteUserFailure,
-    deleteUserSuccess,
     deleteUserStart,
+    deleteUserSuccess,
     signOut,
 } = userSlice.actions;
 

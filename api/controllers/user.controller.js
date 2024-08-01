@@ -1,17 +1,22 @@
-import { User } from "../models/user.model.js";
-import { errorHandler } from "../utils/error.js";
-import bcrypt from "bcrypt";
+import User from '../models/user.model.js';
+import { errorHandler } from '../utils/error.js';
+import bcryptjs from 'bcryptjs';
 
-export const getUser = (req, res) => {
+export const test = (req, res) => {
     res.json({
-        message: "API is working fine"
-    })
-}
-export const updateUser = async (req, res, next) => {
+        message: 'API is working!',
+    });
+};
 
+// update user
+
+export const updateUser = async (req, res, next) => {
+    if (req.user.id !== req.params.id) {
+        return next(errorHandler(401, 'You can update only your account!'));
+    }
     try {
         if (req.body.password) {
-            req.body.password = bcrypt.hashSync(req.body.password, 10);
+            req.body.password = bcryptjs.hashSync(req.body.password, 10);
         }
 
         const updatedUser = await User.findByIdAndUpdate(
@@ -33,6 +38,8 @@ export const updateUser = async (req, res, next) => {
     }
 };
 
+
+// delete user
 
 
 export const deleteUser = async (req, res, next) => {
